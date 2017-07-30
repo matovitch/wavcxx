@@ -212,7 +212,6 @@ private:
     std::vector<Byte> _data;
     std::string       _path;
     std::array<std::vector<Byte>, MAX_CHANNELS> _channels;
-
 };
 
 } // end wavlib namespace

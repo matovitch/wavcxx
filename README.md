@@ -1,5 +1,5 @@
 # wavcxx
-A simple [220 lines header](https://github.com/matovitch/wavcxx/blob/master/wavcxx.hpp) to write [WAV](https://en.wikipedia.org/wiki/WAV) files. 
+A simple [220 lines header](https://github.com/matovitch/wavcxx/blob/master/wavcxx.hpp) to write small [WAV](https://en.wikipedia.org/wiki/WAV) files. 
 
 ## Example
 
@@ -34,7 +34,7 @@ void buildSamples(std::vector<uint16_t>& samples)
 int main()
 {
     wavcxx::File wavFile("./sound/sine_wave.wav");
-    
+
     std::vector<uint16_t> samples;
 
     buildSamples(samples);
