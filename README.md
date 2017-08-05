@@ -1,5 +1,5 @@
 # wavcxx
-A simple [220 lines header](https://github.com/matovitch/wavcxx/blob/master/wavcxx.hpp) to write small [WAV](https://en.wikipedia.org/wiki/WAV) files. 
+A [small header](https://github.com/matovitch/wavcxx/blob/master/wavcxx.hpp) to write [WAV](https://en.wikipedia.org/wiki/WAV) files. 
 
 ## Example
 
@@ -18,7 +18,7 @@ static const float DURATION  =     5.0; // in seconds
 
 void buildSamples(Samples& samples)
 {
-    const float FREQUENCY =  wavcxx::DEFAULT_SAMPLE_FREQUENCY;
+    const float FREQUENCY = wavcxx::DEFAULT_SAMPLE_FREQUENCY;
 
     for (std::size_t i = 0; i < DURATION * FREQUENCY; i++)
     {

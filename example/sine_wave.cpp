@@ -12,7 +12,7 @@ static const float DURATION  =     5.0; // in seconds
 
 void buildSamples(Samples& samples)
 {
-    const float FREQUENCY =  wavcxx::DEFAULT_SAMPLE_FREQUENCY;
+    const float FREQUENCY = wavcxx::DEFAULT_SAMPLE_FREQUENCY;
 
     for (std::size_t i = 0; i < DURATION * FREQUENCY; i++)
     {
