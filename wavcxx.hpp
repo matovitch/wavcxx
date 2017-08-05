@@ -54,6 +54,11 @@ static const Byte FORMAT_PCM = 1;
 
 static constexpr std::size_t MAX_CHANNELS = 6;
 
+//Default File::Config{} members
+static const uint32_t DEFAULT_SAMPLE_FREQUENCY = 44100;
+static const Byte     DEFAULT_N_CHANNELS       =     1;
+static const Byte     DEFAULT_BIT_DEPTH        =    16;
+
 class File
 {
 
@@ -62,27 +67,27 @@ public:
     struct Config
     {
         Config() :
-            _frequency(44100),
-            _nChannels(    1),
-            _bitDepth (   16)
+            sampleFrequency(44100),
+            nChannels      (    1),
+            bitDepth       (   16)
         {}
 
-        Config(uint32_t frequency,
+        Config(uint32_t sampleFrequency,
                Byte     nChannels,
                Byte     bitDepth) :
-            _frequency(frequency),
-            _nChannels(nChannels),
-            _bitDepth (bitDepth )
+            sampleFrequency(sampleFrequency),
+            nChannels      (nChannels      ),
+            bitDepth       (bitDepth       )
         {}
 
-        uint32_t _frequency;
-        Byte     _nChannels;
-        Byte     _bitDepth;
+        uint32_t sampleFrequency;
+        Byte     nChannels;
+        Byte     bitDepth;
     };
 
     File(const std::string& path,
          const Config& config = Config()) :
-        _byteDepth(config._bitDepth / std::numeric_limits<Byte>::digits),
+        _byteDepth(config.bitDepth / std::numeric_limits<Byte>::digits),
         _path(path)
     {
         push(MAGIC_RIFF);
@@ -92,16 +97,16 @@ public:
         push(MAGIC_BKSZ);
         push(FORMAT_PCM);
         padd(1);
-        push(config._nChannels);
+        push(config.nChannels);
         padd(1);
-        push(config._frequency);
+        push(config.sampleFrequency);
 
-        const Byte bytesPerBlock = config._nChannels * _byteDepth;
+        const Byte bytesPerBlock = config.nChannels * _byteDepth;
 
-        push(bytesPerBlock * config._frequency);
+        push(bytesPerBlock * config.sampleFrequency);
         push(bytesPerBlock);
         padd(1);
-        push(config._bitDepth);
+        push(config.bitDepth);
         padd(1);
         push(MAGIC_DATA);
         padd(sizeof(FileSize));
@@ -127,7 +132,7 @@ public:
     }
 
     template <typename T>
-    void pushChannel(std::size_t channelId, T toPush, std::size_t padd = 0)
+    void pushChannel(T toPush, std::size_t channelId = 0, std::size_t padd = 0)
     {
         std::vector<Byte>& channel = _channels[channelId];
 

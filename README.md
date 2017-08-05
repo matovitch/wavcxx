@@ -9,37 +9,38 @@ A simple [220 lines header](https://github.com/matovitch/wavcxx/blob/master/wavc
 #include <cstddef>
 #include <cmath>
 
-void write(const std::vector<uint16_t>& samples,
-           wavcxx::File& wavFile)
+typedef uint16_t            Sample ; // As wavcxx::DEFAULT_BIT_DEPTH == 16.
+typedef std::vector<Sample> Samples;
+
+static const float VOLUME    =  8000.0; // Max. 2^(wavcxx::DEFAULT_BIT_DEPTH) - 1;
+static const float TONE      =   440.0; // in hertz
+static const float DURATION  =     5.0; // in seconds
+
+void buildSamples(Samples& samples)
 {
-    for (auto sample : samples)
+    const float FREQUENCY =  wavcxx::DEFAULT_SAMPLE_FREQUENCY;
+
+    for (std::size_t i = 0; i < DURATION * FREQUENCY; i++)
     {
-        wavFile.pushChannel(0, sample);
+        samples.push_back(VOLUME * sin(2 * M_PI * TONE * i / FREQUENCY));
     }
 }
 
-static const float FREQUENCY = 44100.0;
-static const float VOLUME    =  8000.0;
-static const float TONE      =   440.0;
-static const float DURATION  =     5.0;
-
-void buildSamples(std::vector<uint16_t>& samples)
+void writeSamples(const Samples& samples, wavcxx::File& wavFile)
 {
-    for (std::size_t i = 0; i < static_cast<std::size_t>(DURATION * FREQUENCY); i++)
+    for (const Sample sample : samples)
     {
-        samples.push_back(static_cast<uint16_t>(VOLUME * sin(2 * M_PI * TONE * i / FREQUENCY)));
+        wavFile.pushChannel(sample);
     }
 }
 
 int main()
 {
     wavcxx::File wavFile("./sound/sine_wave.wav");
-
-    std::vector<uint16_t> samples;
+    Samples samples;
 
     buildSamples(samples);
-
-    write(samples, wavFile);
+    writeSamples(samples, wavFile);
 
     return 0;
 }
